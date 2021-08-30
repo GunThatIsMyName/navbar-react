@@ -1,52 +1,54 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { FaBars, FaTwitter,FaYoutube,FaInstagram } from 'react-icons/fa'
-import { links, social } from './data'
-import logo from './logo.svg'
+import React, { useState, useRef, useEffect } from "react";
+import { FaBars, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import { links, social } from "./data";
+import logo from "./logo.svg";
 
 const Navbar = () => {
-  return <nav>
-    <div className="nav-center">
-      <div className="nav-header">
-        <img src={logo} alt="logo" />
-        <button className="nav-toggle">
-          <FaBars />
-        </button>
-      </div>
-      <div className="links-container show-container">
-        <ul className="links">
-          <li>
-            <a href="#">HOME</a>
-          </li>
-          <li>
-            <a href="#">what</a>
-          </li>
-          <li>
-            <a href="#">mago</a>
-          </li>
-          <li>
-            <a href="#">roby</a>
-          </li>
+  const [showLinks, setSHowLinks] = useState(false);
+  const useContainerRef = useRef(null)
+  const useLinksRef = useRef(null)
+  useEffect(()=>{
+    const {height} = useLinksRef.current.getBoundingClientRect();
+    if(showLinks){
+      useContainerRef.current.style.height = `${height}px`
+    }else{
+      useContainerRef.current.style.height = `0px`
+    }
+  },[showLinks])
+  return (
+    <nav>
+      <div className="nav-center">
+        <div className="nav-header">
+          <img src={logo} alt="logo" />
+          <button onClick={()=>setSHowLinks(!showLinks)} className="nav-toggle">
+            <FaBars />
+          </button>
+        </div>
+        <div className="links-container" ref={useContainerRef}>
+          <ul className="links" ref={useLinksRef}>
+            {links.map((items) => {
+              const { id, url, text } = items;
+              return (
+                <li key={id}>
+                  <a href={url}>{text}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <ul className="social-icons">
+          {social.map((item) => {
+            const { id, url, icon } = item;
+            return (
+              <li key={id}>
+                <a href={url}>{icon}</a>
+              </li>
+            );
+          })}
         </ul>
       </div>
-      <ul className="social-icons">
-        <li>
-          <a href="#">
-            <FaTwitter />
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <FaYoutube />
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <FaInstagram />
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-}
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
